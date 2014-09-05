@@ -1,0 +1,180 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+Element providing solution to no problem in particular.
+
+##### Example
+
+    <untitled-element></untitled-element>
+
+@element untitled-element
+@blurb Element providing solution to no problem in particular.
+@status alpha
+@url github.io
+-->
+
+
+<polymer-element name="genome-pager" attributes="page total quantity max rotate cycled" hidden>
+    <!-- 
+        What's better, total items or pages ?
+     -->
+
+    <script>
+        Polymer('genome-pager', {
+            
+
+            observe: {
+                total: 'updatePager',
+                max: 'updatePager',
+                quantity: 'updatePager',
+                rotate: 'updatePager',
+            },
+
+            _current : 1,
+            total : 0,
+            quantity : 10,
+            cycled : false,
+            rotate : true,
+            left : 1,
+            right : 1,
+
+            ready : function () {
+                this.current = this.getAttribute('current') || 1;
+                this.page = this.current;
+            },
+
+            get lastpage () {
+                if(!this.total || !this.quantity) return 1;
+                return Math.ceil(this.total / this.quantity);      
+
+            },
+
+            after : [],
+            before : [],
+
+            set current (cur) {
+                cur = parseInt(cur);
+
+                cur = !cur || cur < 0 ? ( this.cycled ? this.lastpage : 1 ) : cur;
+                if(cur > this.lastpage) return this._current = this.cycled ? 1 : this.lastpage;
+
+                this._current = this.page =  cur;
+                return this._current;
+            },
+
+            updatePager : function  () {
+                // TODO fix no rotate mode
+
+
+                var pages = [], max = parseInt(this.max), current = this.current;
+                var left = 0, right = 0, first = 0, last = 0;
+
+                if(max) {
+
+                    var half = Math.abs(this.max) / 2;   
+                    first = Math.floor(half);             
+                    last = Math.ceil(half);
+                    left = current - first, right = current + last;
+
+
+                }  
+
+
+                var from = left >= 1 ? left : 1, to = right && right <=  this.lastpage ? right : this.lastpage;
+
+                if(current - from < first && to !== this.lastpage) {
+                    to = right + first;
+                }
+
+                if(to - current < last && from !== 1) {
+                    from = left - last;
+                }
+
+                if( Boolean(this.rotate) === false) {
+                    if(this.before.length && current >= this.left && current <= this.right - right) from = this.before[0];
+                    
+
+                    if(this.after.length && current <= this.right && current >= this.left + left) {
+                        to = this.after[this.after.length - 1];  
+                    }
+
+                }
+
+                this.left = from;
+                this.right = to;
+
+
+                for(var i = from; i < current; i++) pages.push(i);
+                this.before = pages;
+
+                pages = [];
+                for(var i = current + 1; i <= to; i++) pages.push(i);
+                this.after = pages;
+
+            },
+
+            currentChanged : function  () {
+                this.updatePager()
+            },
+
+            get current () {
+                return this._current;
+            },
+
+            last : function (event) {
+                if(event) event.preventDefault();
+                this.current = this.lastpage;
+                return false;
+            },
+
+            first : function (event) {
+                if(event) event.preventDefault();
+                this.current = 1;
+                return false;
+            },
+
+            prev : function (event) {
+                if(event) event.preventDefault();
+
+                this.current -= 1;
+                return false;
+            },
+
+            next : function (event) {
+                if(event) event.preventDefault();
+                this.current += 1;  
+                return false;              
+            },
+
+            go : function(event, detail, target) {
+                var page = parseInt(event);
+                if(!isNaN(page)) return this.current = page;
+                if(event) event.preventDefault();
+
+                page = target.getAttribute('data-page') || target.getAttribute('page'); 
+                this.current = page;
+
+                return false;
+            },
+
+            toJSON : function  () {
+                
+            }
+        });
+
+
+    </script>
+
+
+
+</polymer-element>  
+

@@ -1,7 +1,24 @@
 {
-  "name": "untitled-element",
-  "private": true,
+  "name": "genome-pager",
   "dependencies": {
     "polymer": "Polymer/polymer#master"
-  }
+  },
+  "version": "0.0.1",
+  "homepage": "https://github.com/PolymerLabs/untitled-element",
+  "authors": [
+    "Popov Gena <commerce@westtrade.tk>"
+  ],
+  "description": "'genome-pager' is a pager-logic component, which can be used for generator of pager or pager like components - like slider or tabs.",
+  "keywords": [
+    "polymer",
+    "pager"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
 }
