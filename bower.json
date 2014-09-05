@@ -3,7 +3,8 @@
   "dependencies": {
     "polymer": "Polymer/polymer#master"
   },
-  "version": "0.0.1",
+  "main" : "genome-pager.html",
+  "version": "0.0.2",
   "homepage": "https://github.com/CryptexDHT/genome-pager",
   "authors": [
     "Popov Gena <commerce@westtrade.tk>"
@@ -11,7 +12,8 @@
   "description": "'genome-pager' is a pager-logic component, which can be used for generator of pager or pager like components - like slider or tabs.",
   "keywords": [
     "polymer",
-    "pager"
+    "pager",
+    "web-components"
   ],
   "license": "MIT",
   "ignore": [
