@@ -11,17 +11,150 @@
 <html>
 <head>
 
-  <title>untitled-element Demo</title>
+  <title>genome-pager Demo</title>
 
-  <script src="../platform/platform.js"></script>
-  <link rel="import" href="untitled-element.html">
-
+  <script src="http://www.polymer-project.org/platform.js?20140828"></script>
+  <link rel="import" href="../polymer/polymer.html">
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootswatch/3.2.0/cerulean/bootstrap.min.css">
+  
 </head>
 <body unresolved>
 
-  <p>An `untitled-element` looks like this:</p>
 
-  <untitled-element></untitled-element>
+<polymer-element name="test-area" attributes="">
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="genome-pager.html">
+
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        
+        <label for="">Current page
+            <input type="text" value="{{ $.pager.current }}" >
+        </label>
+
+        <label for="">
+            Total items
+            <input type="text" value="{{ $.pager.total }}" >
+        </label>
+
+
+        <label for="">
+            Max size
+            <input type="text" value="{{ $.pager.max }}" >
+        </label>
+
+        <label for="">
+            Quantity
+            <input type="text" value="{{ $.pager.quantity }}" >
+        </label>
+
+        <label for="">
+            Cycled
+            <input type="checkbox" checked="{{ $.pager.cycled }}" >
+        </label>
+
+        <label for="">
+            Rotate
+            <input type="checkbox" checked="{{ $.pager.rotate }}" >
+        </label>
+
+
+        <hr>
+        
+            {{ $.pager.before.length }}
+            {{ $.pager.left }}
+            {{ $.pager.right }}
+        
+        <ul class="pagination">
+            <genome-pager id="pager" max="10" total="1000" cycled="true" page="{{ current }}" rotate="false"></genome-pager>
+
+
+            <template if="{{ $.pager.before.length || $.pager.rotate }}">
+                <li><a href on-click="{{ first }}">&laquo;&laquo;</a></li>
+                <li><a href on-click="{{ prev }}">&laquo;</a></li>
+            </template>
+
+
+
+            <template if="{{ !$.pager.rotate && $.pager.left > 1 }}">
+                <li><a data-page="{{  $.pager.left - 1 }}" on-click="{{ setPage }}">...</a></li>
+            </template>
+
+
+            <template repeat="{{  page in $.pager.before }}">
+                <li><a  page="{{page}}" on-click="{{ setPage }}">{{ page }}</a></li>                
+            </template>
+
+            <li class="active"><a>{{ $.pager.current }} <span class="sr-only">(current)</span></a></li>
+
+            <template repeat="{{ page in $.pager.after }}">
+                <li><a  data-page="{{page}}" on-click="{{ setPage }}">{{ page }}</a></li>                
+            </template>
+
+
+            <template if="{{ !$.pager.rotate && $.pager.right < $.pager.lastpage }}">
+                <li><a data-page="{{  $.pager.right + 1 }}" on-click="{{ setPage }}">...</a></li>
+            </template>
+
+
+
+            <template if="{{ $.pager.after.length || $.pager.rotate }}">            
+                <li><a href on-click="{{ next }}">&raquo;</a></li>
+                <li><a href on-click="{{ last }}">&raquo;&raquo;</a></li>
+            </template>
+
+        </ul>
+
+        {{ $.pager.current }}
+
+        <div class="well well-sm">
+            The selected page no: {{current}}
+        </div>
+
+
+
+    </template>
+    <script>
+        Polymer('test-area', {
+            current : 1,
+
+
+
+            test : function  () {
+                console.log("Test");
+            },
+
+            setPage : function  (event, detail, target) {
+                return this.$.pager.go(event, detail, target);         
+            },
+
+            prev : function (event) {
+                return this.$.pager.prev(event);
+            },
+
+            next : function (event) {
+                return this.$.pager.next(event);
+            },
+
+
+            last : function (event) {
+                return this.$.pager.last(event);
+            },
+
+            first : function (event) {
+                return this.$.pager.first(event);
+            }
+        });
+    </script>
+</polymer-element>
+
+
+<test-area></test-area>
 
 </body>
 </html>
